@@ -1,0 +1,85 @@
+---
+title: "Practica1"
+author: "Hugo Fernandez"
+date: "5 de marzo de 2017"
+output: pdf_document
+---
+
+# 1. Carga	el	grafo	en	memoria.	Las	funciones	 read_table 	y	 graph.data.frame 	facilitan	 la	tarea.	Buscar	en	la	documentación	de	igraph	y	R	su	descripción	y	uso.
+```{r cars}
+library(igraph)
+grafo=read.table("/media/hugo/Datos/Master/Analisis de Grafos y Redes Sociales/grafo_twitter/out.ego-twitter")
+g=graph.data.frame(grafo)
+
+```
+
+# 2. Muestra	 el	 grafo	 por	 pantalla	 e	 indica	 qué	 tipo	 de	 grafo	 es.	 ¿Es	 de	 ayuda	 la	 visualización	del	grafo	para	identificar	su	tipo?
+```{r}
+plot(g)
+g
+is.connected(g)
+
+```
+*Es un grafo dirigido y no ponderado.  En la visualizacion del grafo no ayuda a determinar el tipo*
+
+# 3. ¿Qué	representa, en este grafo, el	grado	de un vértice? Analiza y comenta la	distribución del grado de este grafo.	
+```{r}
+degree(g)
+```
+*El grado de este grafo representa el numero de aristas de entrada que tiene ese vertice*
+
+
+```{r}
+subgraph1 = induced.subgraph(g,c('190','191','192','193','194','13167'))
+plot(subgraph1)
+
+```
+** No se puede decir que la comunidad este fuertemente conectada, ya que hay nodos que solo son sumidero (solo tienen aristas de entrada como el 191, 192, 193 y 194). tienen una conexion debil, ya que si no tenemos en cuenta las direcciones de las aristas, este grafo puede visitar todas las aristas desde cualquier punto **
+
+
+
+### 6. Indica	quiénes	son	los	seguidores	del	usuario	1305.
+```{r}
+neighbors(g,'1305','in')
+```
+** Los seguidores del nodo 1305 son el 1301, el 7331, el 13200 y el 16842 **
+
+###7.Indica	a	quién	sigue	el	usuario	1373.	
+```{r}
+neighbors(g,'1373', 'out')
+```
+** el usuario 1373 sigue a los usuarios 537 2050 8968 5289 16332 501 920 1872 1880 2048 2051 2055 2089 2092 3687 3816 6279 6280 6281 6291 6292 6294 6297 6303 6304 6305 6307 6312 6319 6320 6321 6322 6325 10635 16309 16310 16311 16312 16313 16314 16315 16316 16317 16318 16319 16320 16321 16322 16323 16324 16325 16326 16327 16328 16329 16330 16331 **
+
+### 8.¿Cuál	es	el	ratio	seguidores/siguiendo	del	usuario	13815,	se	puede	considerar	que	es un	usuario	influyente?
+```{r}
+length(neighbors(g,'13815', 'in'))/length(neighbors(g,'13815', 'out'))
+```
+** El ratio Seguidores/siguiendo del usuario 13815 es de 0.1111, se puede decir que es un usuario poco incluyente. **
+
+### 9. ¿Podemos	 decir	 que	 el	 grafo	 representa	 una	 gran	 comunidad?¿O	 existen comunidades	 aisladas?	 Indica	 la	 comunidad	 o	 comunidades	 que	 encuentras	 en	 el	grafo.
+```{r}
+cluster=clusters(g,mode = 'weak')
+cluster$csize
+```
+** No representa una gran comunidad, hay varias comunidades aisladas. **
+
+### 10. Si tenemos en cuenta la comunidad de 35 usuarios del grafo, ¿cuál es el usuario menos importante? ¿Por qué?	
+```{r}
+cluster$
+V(g)$color <- rainbow(cluster$no)[cluster$membership]
+
+plot(g, mark.groups = split(1:vcount(g), cluster$membership))
+
+plot(g,split(1:vcount(g), cluster$membership))
+```
+
+### 11. Si	ahora	analizamos	la	comunidad	más	grande	del	grafo	
+## a. ¿Cuál	es	el	vértice	más	cercano	al	resto?
+```{r}
+
+```
+
+## b. ¿Qué	vértice	es	el	que	controla	un	mayor	flujo	de	información?
+```{r}
+
+```
